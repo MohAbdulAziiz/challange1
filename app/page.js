@@ -1,122 +1,146 @@
 "use client";
 
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faPhone, faGlobe } from "@fortawesome/free-solid-svg-icons";
-import { faLinkedin, faTwitter, faInstagram } from "@fortawesome/free-brands-svg-icons";
+import { useState, useEffect } from "react";
 
-export default function CV() {
-  const [gradient, setGradient] = useState("from-blue-400 via-green-300 to-blue-400");
+export default function Page() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const students = [
+    { no: 1, nim: "230001", nama: "Aulia Rahman", gender: "Laki-laki", prodi: "Data Science", kelas: "Kelas A", semester: 1, alamat: "Jl. Merdeka No. 10, Jakarta", hobby: "Membaca", citaCita: "Data Scientist" },
+    { no: 2, nim: "230002", nama: "Budi Santoso", gender: "Laki-laki", prodi: "Informatika", kelas: "Kelas B", semester: 2, alamat: "Jl. Diponegoro No. 15, Bandung", hobby: "Menulis", citaCita: "Software Engineer" },
+    { no: 3, nim: "230003", nama: "Citra Dewi", gender: "Perempuan", prodi: "Sistem Informasi", kelas: "Kelas C", semester: 3, alamat: "Jl. Sudirman No. 20, Surabaya", hobby: "Olahraga", citaCita: "Entrepreneur" },
+    { no: 4, nim: "230004", nama: "Dedi Prasetyo", gender: "Laki-laki", prodi: "Teknik Komputer", kelas: "Kelas A", semester: 4, alamat: "Jl. Ahmad Yani No. 25, Medan", hobby: "Musik", citaCita: "Dosen" },
+    { no: 5, nim: "230005", nama: "Eka Lestari", gender: "Perempuan", prodi: "Data Science", kelas: "Kelas B", semester: 5, alamat: "Jl. Gatot Subroto No. 30, Yogyakarta", hobby: "Membaca", citaCita: "Data Scientist" },
+    { no: 6, nim: "230006", nama: "Fajar Hidayat", gender: "Laki-laki", prodi: "Teknik Elektro", kelas: "Kelas C", semester: 6, alamat: "Jl. Imam Bonjol No. 12, Semarang", hobby: "Fotografi", citaCita: "Engineer" },
+    { no: 7, nim: "230007", nama: "Gita Anjani", gender: "Perempuan", prodi: "Matematika", kelas: "Kelas A", semester: 1, alamat: "Jl. Kartini No. 8, Surabaya", hobby: "Menari", citaCita: "Peneliti" },
+    { no: 8, nim: "230008", nama: "Hadi Prasetya", gender: "Laki-laki", prodi: "Fisika", kelas: "Kelas B", semester: 2, alamat: "Jl. Melati No. 14, Bali", hobby: "Memancing", citaCita: "Dosen" },
+    { no: 9, nim: "230009", nama: "Indah Lestari", gender: "Perempuan", prodi: "Kedokteran", kelas: "Kelas C", semester: 3, alamat: "Jl. Anggrek No. 21, Bogor", hobby: "Menulis", citaCita: "Dokter" },
+    { no: 10, nim: "230010", nama: "Joko Wibowo", gender: "Laki-laki", prodi: "Manajemen", kelas: "Kelas A", semester: 4, alamat: "Jl. Kenanga No. 32, Jakarta", hobby: "Olahraga", citaCita: "Pebisnis" },
+    { no: 11, nim: "230011", nama: "Kartika Sari", gender: "Perempuan", prodi: "Akuntansi", kelas: "Kelas B", semester: 5, alamat: "Jl. Mawar No. 25, Surabaya", hobby: "Memasak", citaCita: "Akuntan" },
+    { no: 12, nim: "230012", nama: "Lutfi Hidayat", gender: "Laki-laki", prodi: "Data Science", kelas: "Kelas C", semester: 6, alamat: "Jl. Cempaka No. 18, Bandung", hobby: "Coding", citaCita: "Data Engineer" },
+    { no: 13, nim: "230013", nama: "Maya Putri", gender: "Perempuan", prodi: "Farmasi", kelas: "Kelas A", semester: 1, alamat: "Jl. Flamboyan No. 7, Yogyakarta", hobby: "Membaca", citaCita: "Apoteker" },
+    { no: 14, nim: "230014", nama: "Nugroho Saputra", gender: "Laki-laki", prodi: "Hukum", kelas: "Kelas B", semester: 2, alamat: "Jl. Semeru No. 16, Malang", hobby: "Bermain Musik", citaCita: "Pengacara" },
+    { no: 15, nim: "230015", nama: "Oktaviani Dewi", gender: "Perempuan", prodi: "Statistika", kelas: "Kelas C", semester: 3, alamat: "Jl. Bromo No. 5, Medan", hobby: "Melukis", citaCita: "Data Analyst" },
+    { no: 16, nim: "230016", nama: "Putra Mahendra", gender: "Laki-laki", prodi: "Teknik Sipil", kelas: "Kelas A", semester: 4, alamat: "Jl. Gajah Mada No. 11, Surabaya", hobby: "Futsal", citaCita: "Arsitek" },
+    { no: 17, nim: "230017", nama: "Qori Ananda", gender: "Perempuan", prodi: "Sosiologi", kelas: "Kelas B", semester: 5, alamat: "Jl. Diponegoro No. 9, Palembang", hobby: "Menari", citaCita: "Sosiolog" },
+    { no: 18, nim: "230018", nama: "Rizki Aditya", gender: "Laki-laki", prodi: "Ekonomi", kelas: "Kelas C", semester: 6, alamat: "Jl. Ahmad Yani No. 3, Balikpapan", hobby: "Travelling", citaCita: "Ekonom" },
+    { no: 19, nim: "230019", nama: "Sari Widya", gender: "Perempuan", prodi: "Biologi", kelas: "Kelas A", semester: 1, alamat: "Jl. Sudirman No. 27, Bandung", hobby: "Menulis", citaCita: "Peneliti" },
+    { no: 20, nim: "230020", nama: "Teguh Prakoso", gender: "Laki-laki", prodi: "Kimia", kelas: "Kelas B", semester: 2, alamat: "Jl. Gatot Subroto No. 10, Jakarta", hobby: "Basket", citaCita: "Ilmuwan" },
+    { no: 21, nim: "230021", nama: "Umi Khairunnisa", gender: "Perempuan", prodi: "Psikologi", kelas: "Kelas C", semester: 3, alamat: "Jl. Sam Ratulangi No. 15, Makassar", hobby: "Mendengar Musik", citaCita: "Psikolog" },
+    { no: 22, nim: "230022", nama: "Vicky Ardiansyah", gender: "Laki-laki", prodi: "Teknik Mesin", kelas: "Kelas A", semester: 4, alamat: "Jl. Teuku Umar No. 5, Aceh", hobby: "Otomotif", citaCita: "Insinyur" },
+    { no: 23, nim: "230023", nama: "Wulan Sari", gender: "Perempuan", prodi: "Pendidikan", kelas: "Kelas B", semester: 5, alamat: "Jl. Pattimura No. 18, Ambon", hobby: "Membaca", citaCita: "Guru" },
+    { no: 24, nim: "230024", nama: "Xavier Putra", gender: "Laki-laki", prodi: "Ilmu Komputer", kelas: "Kelas C", semester: 6, alamat: "Jl. Dipati Ukur No. 2, Bandung", hobby: "Gaming", citaCita: "Software Developer" }
+  ];  
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset halaman jika pencarian berubah
+  }, [searchTerm]);
+
+  const filteredStudents = students.filter((student) =>
+    student.nama.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.max(1, Math.ceil(filteredStudents.length / itemsPerPage));
+  const displayedStudents = filteredStudents.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const nextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
 
   return (
-    <div className={`flex flex-col items-center justify-center min-h-screen bg-gradient-to-r ${gradient} p-6`}>
-      <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-3xl text-center border border-gray-200">
-        {/* Dropdown untuk mengganti warna gradasi */}
-        <div className="mb-4">
-          <label className="text-gray-700 font-semibold">Choose Background Gradient:</label>
-          <select
-            className="ml-2 p-2 border rounded-lg"
-            onChange={(e) => setGradient(e.target.value)}
-            value={gradient}
-          >
-            <option value="from-blue-400 via-green-300 to-blue-400">Blue-Green</option>
-            <option value="from-purple-500 via-pink-400 to-red-400">Purple-Pink-Red</option>
-            <option value="from-yellow-300 via-orange-400 to-red-500">Yellow-Orange-Red</option>
-          </select>
-        </div>
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">Daftar Mahasiswa</h1>
 
-        {/* Profile Image */}
-        <img
-          src="aziz.jpeg"
-          alt="Moh. Abdul Aziz"
-          className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-blue-500"
+      <div className="flex justify-between mb-4">
+        <input
+          className="p-2 border border-gray-300 rounded"
+          type="text"
+          placeholder="Cari mahasiswa..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <h1 className="text-3xl font-bold text-gray-800">Moh. Abdul Aziz</h1>
-        <p className="text-gray-600">NIM: 232505059</p>
-        <p className="text-gray-600">Program Studi: Sistem Informasi</p>
-        <p className="text-gray-600">Alamat: Cicalengka, Kab. Bandung</p>
 
-        {/* About Section */}
-        <div className="mt-6 text-left">
-          <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">About Me</h2>
-          <p className="text-gray-600 mt-2">
-            I am a passionate software engineer specializing in Python and TypeScript, with a keen interest in
-            machine learning and data analysis. Currently pursuing a degree in Information Systems at Universitas Ma'soem.
-          </p>
-        </div>
+        <select
+          className="p-2 border border-gray-300 rounded"
+          value={itemsPerPage}
+          onChange={(e) => setItemsPerPage(Number(e.target.value) || 10)}
+        >
+          {[5, 10, 15, 20].map((num) => (
+            <option key={num} value={num}>
+              {num} per halaman
+            </option>
+          ))}
+        </select>
+      </div>
 
-        {/* Skills Section */}
-        <div className="mt-6 text-left">
-          <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Skills</h2>
-          <ul className="text-gray-600 list-disc list-inside mt-2">
-            <li>Data Analysis</li>
-            <li>Python & TypeScript</li>
-            <li>Machine Learning</li>
-            <li>SQL & Database Management</li>
-            <li>Public Speaking</li>
-          </ul>
-        </div>
+      <table className="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr className="bg-gray-200">
+            <th className="border border-gray-300 p-2">No</th>
+            <th className="border border-gray-300 p-2">Nama</th>
+            <th className="border border-gray-300 p-2">Gender</th>
+            <th className="border border-gray-300 p-2">Prodi</th>
+            <th className="border border-gray-300 p-2">Kelas</th>
+            <th className="border border-gray-300 p-2">Semester</th>
+            <th className="border border-gray-300 p-2">Alamat</th>
+            <th className="border border-gray-300 p-2">Hobby</th>
+            <th className="border border-gray-300 p-2">Cita-cita</th>
+          </tr>
+        </thead>
+        <tbody>
+        {displayedStudents.length > 0 ? (
+            displayedStudents.map((student) => (
+            <tr key={student.nim} className="text-center">
+              <td className="border border-gray-300 p-2">{student.no}</td>
+              <td className="border border-gray-300 p-2">{student.nama}</td>
+              <td className="border border-gray-300 p-2">{student.gender}</td>
+              <td className="border border-gray-300 p-2">{student.prodi}</td>
+              <td className="border border-gray-300 p-2">{student.kelas}</td>
+              <td className="border border-gray-300 p-2">{student.semester}</td>
+              <td className="border border-gray-300 p-2">{student.alamat}</td>
+              <td className="border border-gray-300 p-2">{student.hobby}</td>
+              <td className="border border-gray-300 p-2">{student.citaCita}</td>
+            </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="6" className="border p-2 text-center text-gray-500">
+                Tidak ada data ditemukan
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
 
-        {/* Services Section */}
-        <div className="mt-6 text-left">
-          <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Services</h2>
-          <ul className="text-gray-600 list-disc list-inside mt-2">
-            <li>Custom Software Development</li>
-            <li>Data Analysis & Visualization</li>
-            <li>Machine Learning & AI Solutions</li>
-            <li>Consultation in System Design</li>
-            <li>Website & Web Application Development</li>
-          </ul>
-        </div>
+      <div className="flex justify-between items-center mt-4">
+        <button
+          className={`px-4 py-2 rounded ${currentPage === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white"}`}
+          onClick={prevPage}
+          disabled={currentPage === 1}
+        >
+          Prev
+        </button>
 
-        {/* Portfolio Section */}
-        <div className="mt-6 text-left">
-          <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Portfolio</h2>
-          <ul className="text-gray-600 list-disc list-inside mt-2">
-            <li>
-              <a href="https://github.com/yourusername/project1" className="text-blue-500 hover:underline">
-                Project 1: Data Visualization Dashboard
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/yourusername/project2" className="text-blue-500 hover:underline">
-                Project 2: Machine Learning Model for Sales Prediction
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/yourusername/project3" className="text-blue-500 hover:underline">
-                Project 3: Web Application for Task Management
-              </a>
-            </li>
-          </ul>
-        </div>
+        <span>
+          Halaman {currentPage} dari {totalPages}
+        </span>
 
-        {/* Contact Section */}
-        <div className="mt-6 text-left">
-          <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">Contact</h2>
-          <p className="text-gray-600 mt-2">
-            <FontAwesomeIcon icon={faEnvelope} className="mr-2" /> mohamad.abdaziz@example.com
-          </p>
-          <p className="text-gray-600">
-            <FontAwesomeIcon icon={faPhone} className="mr-2" /> +62 812 3456 7890
-          </p>
-          <p className="text-gray-600">
-            <FontAwesomeIcon icon={faLinkedin} className="mr-2" />
-            <a href="https://linkedin.com/in/mohabdaziz" className="text-blue-500 hover:underline">linkedin.com/in/mohabdaziz</a>
-          </p>
-          <p className="text-gray-600">
-            <FontAwesomeIcon icon={faTwitter} className="mr-2" />
-            <a href="https://twitter.com/mohabdaziz" className="text-blue-500 hover:underline">twitter.com/mohabdaziz</a>
-          </p>
-          <p className="text-gray-600">
-            <FontAwesomeIcon icon={faInstagram} className="mr-2" />
-            <a href="https://instagram.com/mohabdaziz" className="text-blue-500 hover:underline">instagram.com/mohabdaziz</a>
-          </p>
-          <p className="text-gray-600">
-            <FontAwesomeIcon icon={faGlobe} className="mr-2" />
-            <a href="https://mohabdaziz.com" className="text-blue-500 hover:underline">mohabdaziz.com</a>
-          </p>
-        </div>
+        <button
+          className={`px-4 py-2 rounded ${currentPage === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-blue-500 text-white"}`}
+          onClick={nextPage}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
       </div>
     </div>
   );
