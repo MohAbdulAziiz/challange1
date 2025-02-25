@@ -1,66 +1,75 @@
-export default function StudentTable() {
-  const students = [
-    { no: 1, nim: "123456", nama: "Ahmad", gender: "L", prodi: "Data Science", kelas: "A", semester: "5", alamat: "Bandung", hobby: "Membaca", citacita: "Data Scientist" },
-    { no: 2, nim: "123457", nama: "Budi", gender: "L", prodi: "Informatika", kelas: "B", semester: "3", alamat: "Jakarta", hobby: "Gaming", citacita: "Software Engineer" },
-    { no: 3, nim: "123458", nama: "Citra", gender: "P", prodi: "Sistem Informasi", kelas: "A", semester: "2", alamat: "Surabaya", hobby: "Menulis", citacita: "UX Designer" },
-    { no: 4, nim: "123459", nama: "Dewi", gender: "P", prodi: "Data Science", kelas: "C", semester: "6", alamat: "Bandung", hobby: "Fotografi", citacita: "Data Analyst" },
-    { no: 5, nim: "123460", nama: "Eko", gender: "L", prodi: "Teknik Komputer", kelas: "B", semester: "4", alamat: "Yogyakarta", hobby: "Olahraga", citacita: "Network Engineer" },
-  ];
+'use client';
 
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Image from 'next/image';
+
+export default function AboutMe() {
   return (
-    <div className="max-w-screen-lg mx-auto p-4">
-      {/* Desktop View */}
-      <div className="hidden md:block overflow-x-auto">
-        <table className="min-w-full border border-gray-300 text-sm">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="border px-2 py-1">No</th>
-              <th className="border px-2 py-1">NIM</th>
-              <th className="border px-2 py-1">Nama</th>
-              <th className="border px-2 py-1">Gender</th>
-              <th className="border px-2 py-1">Prodi</th>
-              <th className="border px-2 py-1">Kelas</th>
-              <th className="border px-2 py-1">Semester</th>
-              <th className="border px-2 py-1">Alamat</th>
-              <th className="border px-2 py-1">Hobby</th>
-              <th className="border px-2 py-1">Cita-cita</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map((student) => (
-              <tr key={student.no}>
-                <td className="border px-2 py-1">{student.no}</td>
-                <td className="border px-2 py-1">{student.nim}</td>
-                <td className="border px-2 py-1">{student.nama}</td>
-                <td className="border px-2 py-1">{student.gender}</td>
-                <td className="border px-2 py-1">{student.prodi}</td>
-                <td className="border px-2 py-1">{student.kelas}</td>
-                <td className="border px-2 py-1">{student.semester}</td>
-                <td className="border px-2 py-1">{student.alamat}</td>
-                <td className="border px-2 py-1">{student.hobby}</td>
-                <td className="border px-2 py-1">{student.citacita}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="relative flex flex-col min-h-screen bg-gray-100 overflow-hidden">
+      {/* Header tetap di atas */}
+      <div className="fixed top-0 w-full z-50 bg-white shadow-md">
+        <Header />
       </div>
-      
-      {/* Mobile View */}
-      <div className="md:hidden grid grid-cols-1 gap-4">
-        {students.map((student) => (
-          <div key={student.no} className="border p-4 rounded-lg shadow-md bg-white">
-            <p><strong>No:</strong> {student.no}</p>
-            <p><strong>NIM:</strong> {student.nim}</p>
-            <p><strong>Nama:</strong> {student.nama}</p>
-            <p><strong>Gender:</strong> {student.gender}</p>
-            <p><strong>Prodi:</strong> {student.prodi}</p>
-            <p><strong>Kelas:</strong> {student.kelas}</p>
-            <p><strong>Semester:</strong> {student.semester}</p>
-            <p><strong>Alamat:</strong> {student.alamat}</p>
-            <p><strong>Hobby:</strong> {student.hobby}</p>
-            <p><strong>Cita-cita:</strong> {student.citacita}</p>
+
+      {/* Split Screen Layout */}
+      <div className="flex flex-col md:flex-row items-center justify-center min-h-screen w-full">
+        
+        {/* Bagian Kiri - Background dengan Foto */}
+        <div className="relative w-full md:w-1/2 min-h-screen flex items-center justify-center overflow-hidden">
+          {/* Background Image */}
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/aziz.jpeg')" }}>
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-gray-900/60 to-transparent backdrop-blur-lg"></div>
           </div>
-        ))}
+          
+          {/* Foto Profil dengan efek glassmorphism */}
+          <div className="relative z-10 flex flex-col items-center p-6 bg-white/20 backdrop-blur-lg rounded-2xl shadow-xl border border-white/30">
+            <div className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden shadow-xl border-4 border-white transform hover:scale-105 transition-all duration-300">
+              <Image
+                src="/aziz.jpeg"
+                alt="Profile Picture"
+                width={256}
+                height={256}
+                className="object-cover w-full h-full"
+                priority
+              />
+            </div>
+            <h2 className="text-white mt-4 text-xl font-semibold">Moh. Abdul Aziz</h2>
+            <p className="text-gray-300 text-sm">UI/UX Designer & Developer</p>
+          </div>
+        </div>
+
+        {/* Bagian Kanan - Teks */}
+        <div className="w-full md:w-1/2 flex flex-col items-start justify-center bg-white/90 backdrop-blur-lg min-h-screen rounded-lg shadow-lg">
+          <div className="p-8 md:p-16">
+            <h1 className="text-4xl font-bold text-gray-800 mb-4">About Me</h1>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              I am a passionate UI/UX designer and developer who loves crafting
+              beautiful and functional web experiences. With a keen eye for design 
+              and strong technical skills, I bring ideas to life through creativity 
+              and technology.
+            </p>
+            <div className="mt-6 flex space-x-4">
+              <a 
+                href="#"
+                className="px-6 py-3 text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-lg transition-all duration-300"
+              >
+                View My Work
+              </a>
+              <a 
+                href="#"
+                className="px-6 py-3 text-blue-600 border border-blue-600 hover:bg-blue-600 hover:text-white rounded-lg shadow-lg transition-all duration-300"
+              >
+                Contact Me
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="relative z-10">
+        <Footer />
       </div>
     </div>
   );
